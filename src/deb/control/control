@@ -1,0 +1,10 @@
+Package: odn-cas
+Source:  odn-cas
+Version: [[version]]
+Section: java
+Priority: extra
+Architecture: all
+Maintainer: jan.marcek@eea.sk
+Homepage: https://www.apereo.org/
+Depends:  openjdk-7-jre-headless, tomcat7
+Description:
