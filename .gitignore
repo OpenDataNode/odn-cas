@@ -1,3 +1,5 @@
+/target
+/src/main/webapp/WEB-INF/cas.properties
 *.class
 
 # Mobile Tools for Java (J2ME)

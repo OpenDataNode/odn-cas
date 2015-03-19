@@ -1,0 +1,14 @@
+{
+  "@class" : "org.jasig.cas.services.RegexRegisteredService",
+  "id" : 10000001,
+  "description" : "This service definition authorized all application urls that support HTTPS and IMAPS protocols.",
+  "serviceId" : "^(http|https|imaps)://.*",
+  "name": "HTTPS and IMAPS",
+  "evaluationOrder" : 10000001,
+  "logo" : null,
+  "logoutType" : "BACK_CHANNEL",
+  "attributeReleasePolicy" : {
+  "@class" : "org.jasig.cas.services.ReturnAllAttributeReleasePolicy"
+  },
+  "requiredHandlers" : [ "java.util.HashSet", [ ] ]
+}
