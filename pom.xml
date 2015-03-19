@@ -20,10 +20,10 @@
                         <overlay>
                             <groupId>org.jasig.cas</groupId>
                             <artifactId>cas-server-webapp</artifactId>
-                            <!--<excludes>
+                            <excludes>
                                 <exclude>WEB-INF/cas.properties</exclude>
-                                <exclude>WEB-INF/classes/log4j.xml</exclude>
-                            </excludes> -->
+                                <!-- exclude>WEB-INF/classes/log4j.xml</exclude -->
+                            </excludes>
                         </overlay>
                     </overlays>
                 </configuration>
@@ -41,7 +41,7 @@
                                 </goals>
                                 <configuration>
                                     <dataSet>
-                                        <!-- data>
+                                        <data>
                                             <src>${basedir}/src/deb/etc/</src>
                                             <type>directory</type>
                                             <mapper>
@@ -49,7 +49,7 @@
                                                 <prefix>/etc</prefix>
                                             </mapper>
                                         </data>
-                                        <data>
+                                        <!-- data>
                                             <src>${basedir}/src/deb/var/lib/midpoint.home</src>
                                             <type>directory</type>
                                             <mapper>
@@ -58,13 +58,13 @@
                                                 <user>odn-midpoint</user>
                                                 <group>odn-midpoint</group>
                                             </mapper>
-                                        </data>
+                                        </data -->
                                         <data>
-                                            <src>${basedir}/src/deb/usr/share/odn-midpoint</src>
+                                            <src>${basedir}/src/deb/usr/share/odn-cas</src>
                                             <type>directory</type>
                                             <mapper>
                                                 <type>perm</type>
-                                                <prefix>/usr/share/odn-midpoint</prefix>
+                                                <prefix>/usr/share/odn-cas</prefix>
                                                 <user>odn-midpoint</user>
                                                 <group>odn-midpoint</group>
                                             </mapper>
@@ -72,59 +72,60 @@
                                         <data>
                                             <type>template</type>
                                             <paths>
-                                                <path>/var/cache/odn-midpoint/</path>
-                                                <path>/var/log/odn-midpoint/</path>
+                                                <path>/var/cache/odn-cas/</path>
+                                                <path>/var/log/odn-cas/</path>
+                                                <path>/var/tmp/odn-cas</path>
                                             </paths>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
-                                        <data>
+                                        <!--data>
                                             <type>link</type>
-                                            <linkName>/usr/share/odn-midpoint/conf</linkName>
-                                            <linkTarget>/etc/odn-midpoint</linkTarget>
+                                            <linkName>/usr/share/odn-cas/webapps/cas/WEB-INF/cas.properties</linkName>
+                                            <linkTarget>/etc/odn-cas/cas.properties</linkTarget>
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
-                                            </mapper>
-                                        </data>
-                                        <data>
-                                            <type>link</type>
-                                            <linkName>/usr/share/odn-midpoint/logs</linkName>
-                                            <linkTarget>/var/log/odn-midpoint/</linkTarget>
-                                            <symlink>true</symlink>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
-                                            </mapper>
-                                        </data>
-                                        <data>
-                                            <type>link</type>
-                                            <linkName>/usr/share/odn-midpoint/work</linkName>
-                                            <linkTarget>/var/cache/odn-midpoint/</linkTarget>
-                                            <symlink>true</symlink>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
-                                            </mapper>
-                                        </data>
-                                        <data>
-                                            <type>link</type>
-                                            <linkName>/usr/share/odn-midpoint/temp</linkName>
-                                            <linkTarget>/var/tmp/odn-midpoint</linkTarget>
-                                            <symlink>true</symlink>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
                                             </mapper>
                                         </data -->
+                                        <data>
+                                            <type>link</type>
+                                            <linkName>/usr/share/odn-cas/logs</linkName>
+                                            <linkTarget>/var/log/odn-cas</linkTarget>
+                                            <symlink>true</symlink>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>link</type>
+                                            <linkName>/usr/share/odn-cas/work</linkName>
+                                            <linkTarget>/var/cache/odn-cas/</linkTarget>
+                                            <symlink>true</symlink>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>link</type>
+                                            <linkName>/usr/share/odn-cas/temp</linkName>
+                                            <linkTarget>/var/tmp/odn-cas</linkTarget>
+                                            <symlink>true</symlink>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
                                         <data>
                                             <src>${project.build.directory}/cas</src>
                                             <type>directory</type>
