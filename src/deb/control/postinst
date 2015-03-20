@@ -26,6 +26,9 @@ create_user() {
 
 fix_perms() {
     chmod +x  /etc/init.d/odn-cas
+    chown  odn-cas /var/cache/odn-cas
+    chown  odn-cas /var/tmp/odn-cas
+    chown  odn-cas /var/log/odn-cas
 }
 
 service_start() {
