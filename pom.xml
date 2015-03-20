@@ -80,7 +80,7 @@
                                                 <group>odn-cas</group>
                                             </mapper>
                                         </data>
-                                        <!--data>
+                                        <data>
                                             <type>link</type>
                                             <linkName>/usr/share/odn-cas/webapps/cas/WEB-INF/cas.properties</linkName>
                                             <linkTarget>/etc/odn-cas/cas.properties</linkTarget>
@@ -90,7 +90,7 @@
                                                 <user>odn-cas</user>
                                                 <group>odn-cas</group>
                                             </mapper>
-                                        </data -->
+                                        </data>
                                         <data>
                                             <type>link</type>
                                             <linkName>/usr/share/odn-cas/logs</linkName>
