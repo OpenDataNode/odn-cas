@@ -41,10 +41,32 @@ service_start() {
     fi
 }
 
+set_ldap() {
+    echo ">> set_ldap"
+    LDAP_DB_PATH=/var/lib/ldap_odn
+    chown -R openldap:openldap $LDAP_DB_PATH
+    chown openldap:openldap /etc/odn-simple/ldap/olcDatabase\=\{2}hdb.ldif
+    #
+    if [ ! -e  /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif  ]; then
+        echo "set ldap configuration"
+        ln -s /etc/odn-simple/ldap/olcDatabase\=\{2}hdb.ldif  /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif
+    fi
+        
+    invoke-rc.d slapd restart
+    TREE="dc=opendata,dc=org"
+    echo "ldap tree: ${TREE} for IDM created"
+    ldapadd -x -D cn=admin,$TREE -w 5ecr3t -f  /usr/share/odn-simple/ldap/admin.ldif || true
+    ldapadd -x -D cn=admin,$TREE -w 5ecr3t -f  /usr/share/odn-simple/ldap/people.ldif || true
+    echo "ldap user for IDM created"
+    echo "<< set_ldap"
+} 
+
+
 case "$1" in
     configure)
         create_user
         fix_perms
+        set_ldap
         service_start
     ;;
 

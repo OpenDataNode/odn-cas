@@ -124,6 +124,26 @@
                                             </mapper>
                                         </data>
                                         <data>
+                                            <src>${project.basedir}/src/slapd/data</src>
+                                            <type>directory</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/usr/share/odn-simple/ldap</prefix>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <src>${project.basedir}/src/slapd/conf</src>
+                                            <type>directory</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/etc/odn-simple/ldap</prefix>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
+                                        <data>
                                             <src>${project.basedir}/cas.properties</src>
                                             <type>file</type>
                                             <mapper>
