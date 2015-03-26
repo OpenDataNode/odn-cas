@@ -6,5 +6,5 @@ Priority: extra
 Architecture: all
 Maintainer: jan.marcek@eea.sk
 Homepage: https://www.apereo.org/
-Depends:  openjdk-7-jre-headless, tomcat7
+Depends:  openjdk-7-jre-headless, tomcat7, slapd, ldap-utils
 Description:

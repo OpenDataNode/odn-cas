@@ -123,7 +123,17 @@
                                                 <group>odn-cas</group>
                                             </mapper>
                                         </data>
-                                    </dataSet>
+                                        <data>
+                                            <src>${project.basedir}/cas.properties</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/etc/odn-cas</prefix>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>
+                                   </dataSet>
                                 </configuration>
                             </execution>
                         </executions>
