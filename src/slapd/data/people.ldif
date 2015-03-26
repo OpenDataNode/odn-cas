@@ -4,3 +4,90 @@ dn: ou=people,dc=opendata,dc=org
 objectClass: organizationalUnit
 objectClass: top
 ou: people
+
+dn: uid=casuser,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Cas User
+sn: User
+givenName: Cas
+initials: MOD-R-TRANSA
+ou: admin
+uid: casuser
+userPassword:: e1NTSEF9dUVQU3VjSVJXUnViUVEvOTkwUXNtU3VpTmlxbGJoZENHZlZTWWc9P
+ Q==
+
+dn: uid=user2,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: user2
+sn: user2
+givenName: user2
+initials: MOD-R-PO
+ou: user
+uid: user2
+userPassword:: e1NTSEF9dloyajBsTk5RUjZKT2loNXY2akN2bmR0VUZtaDViTmpFVVNoK3c9P
+ Q==
+
+dn: uid=test1,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: test1
+sn: test1
+givenName: test1
+initials: MOD-R-PO
+ou: user
+uid: test1
+userPassword:: e1NTSEF9ZnFiMG0vemxUYVFaM1NYTHN0aTVOVFhFUGhrd2NsZ25VSEpFTFE9P
+ Q==
+
+dn: uid=user1,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: User First
+sn: First
+givenName: User
+initials: MOD-R-PO
+o: some
+ou: user
+uid: user1
+userPassword:: e1NTSEF9SVdoZHFjSHE2VjhWQUNUaXN3UmlnWENFL3lyMnJKOEFLcVNhc1E9P
+ Q==
+
+dn: uid=user3,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: user3
+sn: user3
+description: user3
+givenName: user3
+initials: MOD-R-PO
+ou: user
+uid: user3
+userPassword:: e1NTSEF9bjFiK2MvWGl0UVNJcDBGbjFzcEJSb1U3a1Z2ek4rOWR1QktGUUE9P
+ Q==
+
+dn: uid=user7,ou=people,dc=opendata,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: user7
+sn: user7
+givenName: user7
+initials: MOD-R-PO
+ou: user
+uid: user7
+userPassword:: e1NTSEF9QUVMYWx3VUVZeUhEWnRpUWNLMXhJV2NKY1NPb1RYMlJ3ekk3bVE9P
+ Q==
+
