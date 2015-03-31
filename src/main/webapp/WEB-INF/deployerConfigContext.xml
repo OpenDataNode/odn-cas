@@ -192,7 +192,7 @@
 
 	  <bean id="dnResolver"
       class="org.ldaptive.auth.FormatDnResolver"
-      c:format="uid=%s,ou=people,dc=eea,dc=sk" />
+      c:format="uid=%s,ou=people,dc=opendata,dc=org" />
 
 <bean id="authHandler" class="org.ldaptive.auth.PooledBindAuthenticationHandler"
       p:connectionFactory-ref="pooledLdapConnectionFactory" />
