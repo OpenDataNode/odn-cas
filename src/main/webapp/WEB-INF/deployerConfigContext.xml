@@ -40,10 +40,15 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+<context:component-scan base-package="org.jasig.cas" />
+    <context:annotation-config />
 
     <!--
        | The authentication manager defines security policy for authentication by specifying at a minimum
@@ -61,7 +66,7 @@
                    | set its name to something other than its default name (typically the simple class name).
                    -->
                 <entry key-ref="proxyAuthenticationHandler" value-ref="proxyPrincipalResolver" />
-                <entry key-ref="primaryAuthenticationHandler" value-ref="primaryPrincipalResolver" />
+                <entry key-ref="primaryAuthenticationHandler" ><null /></entry>
             </map>
         </constructor-arg>
 
@@ -121,10 +126,10 @@
        | Resolves a principal from a credential using an attribute repository that is configured to resolve
        | against a deployer-specific store (e.g. LDAP).
        -->
-    <bean id="primaryPrincipalResolver"
+ <!--  <bean id="primaryPrincipalResolver"
           class="org.jasig.cas.authentication.principal.PersonDirectoryPrincipalResolver"
           p:principalFactory-ref="principalFactory"
-          p:attributeRepository-ref="ldapPersonAttributeDao" />
+          p:attributeRepository-ref="ldapPersonAttributeDao" /> -->
 
     <!--
     Bean that defines the attributes that a service may return.  This example uses the Stub/Mock version.  A real implementation
@@ -176,15 +181,14 @@
 <bean id="primaryAuthenticationHandler"
           class="org.jasig.cas.authentication.LdapAuthenticationHandler"
          p:principalIdAttribute="uid"
-      c:authenticator-ref="authenticator" >
-	  <property name="principalAttributeMap">
-        <map>
-            <entry key="member" value="member" />
-            <entry key="mail" value="mail" />
-            <entry key="displayName" value="displayName" />
-        </map>
-    </property>
-    </bean>   
+      c:authenticator-ref="authenticator" p:principalAttributeList-ref="attributesToReturn">
+	  </bean>
+    
+    <util:list id="attributesToReturn">
+   <value>uid</value>
+   <value>cn</value>
+   <value>sn</value>
+</util:list>
 	
 	<bean id="authenticator" class="org.ldaptive.auth.Authenticator"
       c:resolver-ref="dnResolver"
