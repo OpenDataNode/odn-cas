@@ -61,12 +61,40 @@ set_ldap() {
     echo "<< set_ldap"
 } 
 
+set_ldap_evolveum() {
+
+    echo ">> set_ldap"
+
+    chmod +x /usr/share/odn-cas/bin/ldapgenerate 
+    chmod +x /usr/share/odn-cas/bin/slapdconf 
+    chmod +x /usr/share/odn-cas/bin/slapdadm
+    chmod +x /usr/share/odn-cas/bin/ldaptest
+
+    LDAP_DB_PATH=/var/lib/ldap_odn
+    chown -R openldap:openldap $LDAP_DB_PATH
+
+    TREE="dc=opendata,dc=org"
+
+    /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin
+
+    /usr/share/odn-cas/bin/slapdconf add-module sssvlv
+    /usr/share/odn-cas/bin/slapdconf add-overlay $TREE sssvlv olcSssVlvConfig
+
+    /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
+
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/aci.ldif
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/test1.ldif
+
+    echo "ldap user for IDM created"
+    echo "<< set_ldap"
+}
 
 case "$1" in
     configure)
         create_user
         fix_perms
-#        set_ldap
+        set_ldap_evolveum
         service_start
     ;;
 
