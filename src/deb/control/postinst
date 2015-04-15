@@ -41,6 +41,23 @@ service_start() {
     fi
 }
 
+get_hostname() {
+    HOSTNAME=`hostname --all-fqdns`
+    if [ -z ${HOSTNAME}  ]
+    then
+        HOSTNAME=`hostname`
+    fi
+
+    if [ -z ${HOSTNAME}  ] 
+    then
+        HOSTNAME="localhost"
+    fi
+
+    HOSTNAME="$(echo "${HOSTNAME}" | tr -d '[[:space:]]')"    
+    # return hostname
+    echo "$HOSTNAME"
+}
+
 generate_keystore() {
     echo ">> generate_keystore"
   
