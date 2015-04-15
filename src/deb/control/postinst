@@ -68,10 +68,15 @@ generate_keystore() {
     PRIVATEKEY_PASS="changeit"
     DAYS_VALID=730
 
+    mkdir /usr/local/share/ca-certificates/$HOSTNAME
+
     openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
     openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
     keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
+    keytool -export -keystore /usr/share/odn-cas/conf/.keystore -alias tomcat -file /usr/local/share/ca-certificates/$HOSTNAME/export.crt
     rm *.pem *.p12
+
+    update-ca-certificates
 
     echo "keystore created"
     echo "<< generate_keystore"
