@@ -85,7 +85,7 @@
          connector should be using the OpenSSL style configuration
          described in the APR documentation -->
     
-    <Connector port="28443" protocol="org.apache.coyote.http11.Http11Protocol" SSLEnabled="true"
+    <Connector port="38443" protocol="org.apache.coyote.http11.Http11Protocol" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
                keystoreFile="conf/.keystore" clientAuth="false" sslProtocol="TLS" />
     
