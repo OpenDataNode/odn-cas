@@ -83,8 +83,7 @@ set_ldap_evolveum() {
     /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
     ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/aci.ldif
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/test1.ldif
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif
 
     echo "ldap user for IDM created"
     echo "<< set_ldap"
