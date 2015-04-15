@@ -41,24 +41,23 @@ service_start() {
     fi
 }
 
-set_ldap() {
-    echo ">> set_ldap"
-    LDAP_DB_PATH=/var/lib/ldap_odn
-    chown -R openldap:openldap $LDAP_DB_PATH
-    chown openldap:openldap /etc/odn-simple/ldap/olcDatabase\=\{2}hdb.ldif
-    #
-    if [ ! -e  /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif  ]; then
-        echo "set ldap configuration"
-        ln -s /etc/odn-simple/ldap/olcDatabase\=\{2}hdb.ldif  /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif
-    fi
-        
-    invoke-rc.d slapd restart
-    TREE="dc=opendata,dc=org"
-    echo "ldap tree: ${TREE} for IDM created"
-    ldapadd -x -D cn=admin,$TREE -w 5ecr3t -f  /usr/share/odn-simple/ldap/admin.ldif || true
-    ldapadd -x -D cn=admin,$TREE -w 5ecr3t -f  /usr/share/odn-simple/ldap/people.ldif || true
-    echo "ldap user for IDM created"
-    echo "<< set_ldap"
+generate_keystore() {
+    echo ">> generate_keystore"
+  
+    HOSTNAME=$(get_hostname)
+ 
+    KEYSTORE_NAME=/usr/share/odn-cas/conf/.keystore
+    KEYSTORE_PASSWORD="changeit"
+    PRIVATEKEY_PASS="changeit"
+    DAYS_VALID=730
+
+    openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
+    openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
+    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
+    rm *.pem *.p12
+
+    echo "keystore created"
+    echo "<< generate_keystore"
 } 
 
 set_ldap_evolveum() {
@@ -94,6 +93,7 @@ case "$1" in
         create_user
         fix_perms
         set_ldap_evolveum
+        generate_keystore
         service_start
     ;;
 
