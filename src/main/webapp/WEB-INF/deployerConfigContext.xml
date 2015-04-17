@@ -117,6 +117,8 @@
     <util:map id="attributesToReturn">
             <entry key="initials" value="SPR.Roles"/>
             <entry key="cn" value="cn" />
+            <entry key="sn" value="sn" />
+            <entry key="givenName" value="givenName" />
 			<entry key="ou" value="ou" />
 			<entry key="o" value="o" />
             <entry key="mail" value="mail" />
