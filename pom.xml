@@ -17,6 +17,7 @@
             <version>1.0-m4.3</version>
             <configuration>
                 <allowSnapshots>true</allowSnapshots>
+                <noDeploy>true</noDeploy>
                 <!-- see goals wiki page for configuration options -->
             </configuration>
         </plugin>
