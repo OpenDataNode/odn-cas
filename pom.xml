@@ -91,7 +91,6 @@
                                                 <path>/var/cache/odn-cas/</path>
                                                 <path>/var/log/odn-cas/</path>
                                                 <path>/var/tmp/odn-cas</path>
-                                                <path>/var/lib/ldap_odn</path>
                                             </paths>
                                             <mapper>
                                                 <type>perm</type>
