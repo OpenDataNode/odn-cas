@@ -68,17 +68,22 @@ generate_keystore() {
     PRIVATEKEY_PASS="changeit"
     DAYS_VALID=730
 
-    mkdir /usr/local/share/ca-certificates/$HOSTNAME
+    CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
+    if [ ! -d $CERTS_PATH ] ; then 
+        mkdir $CERTS_PATH
+   
+        openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
+        openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
+        keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
+        keytool -export -storepass $KEYSTORE_PASSWORD -keystore /usr/share/odn-cas/conf/.keystore -alias tomcat -file $CERTS_PATH/export.crt
+        rm *.pem *.p12
 
-    openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
-    openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
-    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
-    keytool -export -storepass $KEYSTORE_PASSWORD -keystore /usr/share/odn-cas/conf/.keystore -alias tomcat -file /usr/local/share/ca-certificates/$HOSTNAME/export.crt
-    rm *.pem *.p12
-
-    update-ca-certificates
-
-    echo "keystore created"
+        update-ca-certificates
+        echo "keystore created"
+    else
+        echo "keystore has already been set"
+    fi
+     
     echo "<< generate_keystore"
 } 
 
@@ -89,24 +94,30 @@ set_ldap_evolveum() {
     chmod +x /usr/share/odn-cas/bin/ldapgenerate 
     chmod +x /usr/share/odn-cas/bin/slapdconf 
     chmod +x /usr/share/odn-cas/bin/slapdadm
-    chmod +x /usr/share/odn-cas/bin/ldaptest
+    chmod +x /usr/share/odn-cas/bin/ldaptest 
 
     LDAP_DB_PATH=/var/lib/ldap_odn
-    chown -R openldap:openldap $LDAP_DB_PATH
+   
+    if [ ! -d $LDAP_DB_PATH ]; then
+        mkdir -p /var/lib/ldap_odn
+        chown -R openldap:openldap $LDAP_DB_PATH
+            
+        TREE="dc=opendata,dc=org"
 
-    TREE="dc=opendata,dc=org"
+        /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin
 
-    /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin
+        /usr/share/odn-cas/bin/slapdconf add-module sssvlv
+        /usr/share/odn-cas/bin/slapdconf add-overlay $TREE sssvlv olcSssVlvConfig
 
-    /usr/share/odn-cas/bin/slapdconf add-module sssvlv
-    /usr/share/odn-cas/bin/slapdconf add-overlay $TREE sssvlv olcSssVlvConfig
+        /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
-    /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
-
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif
-
-    echo "ldap user for IDM created"
+        ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
+        ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
+        echo "ldap user for IDM created"	
+    else
+        echo "ldap has already been set"
+    fi
+   
     echo "<< set_ldap"
 }
 
