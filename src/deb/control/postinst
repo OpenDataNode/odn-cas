@@ -41,6 +41,15 @@ service_start() {
     fi
 }
 
+service_slapd_restart() {
+    if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+        invoke-rc.d slapd restart || true
+    else
+        service slapd restart || true
+    fi
+}
+
+
 get_hostname() {
     HOSTNAME=`hostname --all-fqdns`
     if [ -z ${HOSTNAME}  ]
@@ -96,6 +105,7 @@ set_ldap_evolveum() {
     chmod +x /usr/share/odn-cas/bin/slapdadm
     chmod +x /usr/share/odn-cas/bin/ldaptest 
 
+    CONFIG=/etc/default/slapd
     LDAP_DB_PATH=/var/lib/ldap_odn
    
     if [ ! -d $LDAP_DB_PATH ]; then
@@ -113,7 +123,16 @@ set_ldap_evolveum() {
 
         ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
         ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
-        echo "ldap user for IDM created"	
+        echo "ldap user for IDM created"    
+       
+        # set slapd to running on 127.0.0.1
+        if grep -q "^SLAPD_SERVICES=\"ldap://127.0.0.1:389/" $CONFIG ; then
+            echo "slapd has already been set to running on localhost port"
+        else
+            sed -i "s/^SLAPD_SERVICES.*/SLAPD_SERVICES=\"ldap:\/\/127.0.0.1:389\/\/ ldapi:\/\/\/\"/" $CONFIG
+        fi
+       
+        service_slapd_restart
     else
         echo "ldap has already been set"
     fi
