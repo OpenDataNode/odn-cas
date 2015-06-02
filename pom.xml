@@ -65,16 +65,6 @@
                                                 <prefix>/etc</prefix>
                                             </mapper>
                                         </data>
-                                        <!-- data>
-                                            <src>${basedir}/src/deb/var/lib/midpoint.home</src>
-                                            <type>directory</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>/var/lib/midpoint.home</prefix>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
-                                            </mapper>
-                                        </data -->
                                         <data>
                                             <src>${basedir}/src/deb/usr/share/odn-cas</src>
                                             <type>directory</type>
@@ -171,6 +161,16 @@
                                                 <group>odn-cas</group>
                                             </mapper>
                                         </data>
+                                        <data>
+                                            <src>${project.basedir}/log4j2.xml</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/etc/odn-cas</prefix>
+                                                <user>odn-cas</user>
+                                                <group>odn-cas</group>
+                                            </mapper>
+                                        </data>                                        
                                    </dataSet>
                                 </configuration>
                             </execution>
