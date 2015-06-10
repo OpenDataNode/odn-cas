@@ -26,9 +26,10 @@ create_user() {
 
 fix_perms() {
     chmod +x  /etc/init.d/odn-cas
-    chown  odn-cas /var/cache/odn-cas
-    chown  odn-cas /var/tmp/odn-cas
-    chown  odn-cas /var/log/odn-cas
+    chown  odn-cas -R /var/cache/odn-cas
+    chown  odn-cas -R /var/tmp/odn-cas
+    chown  odn-cas -R /var/log/odn-cas
+    chown  odn-cas -R /usr/share/odn-cas
 }
 
 service_start() {
@@ -71,28 +72,20 @@ generate_keystore() {
     echo ">> generate_keystore"
   
     HOSTNAME=$(get_hostname)
- 
+    CERTS_PATH=/etc/odn-cas/ssl/certs
+    PRIVATE_PATH=/etc/odn-cas/ssl/private
     KEYSTORE_NAME=/usr/share/odn-cas/conf/.keystore
     KEYSTORE_PASSWORD="changeit"
     PRIVATEKEY_PASS="changeit"
     DAYS_VALID=730
 
-    CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
-    if [ ! -d $CERTS_PATH ] ; then 
-        mkdir $CERTS_PATH
-   
-        openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
-        openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
-        keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
-        keytool -export -storepass $KEYSTORE_PASSWORD -keystore /usr/share/odn-cas/conf/.keystore -alias tomcat -file $CERTS_PATH/export.crt
-        rm *.pem *.p12
-
-        update-ca-certificates
-        echo "keystore created"
-    else
-        echo "keystore has already been set"
-    fi
-     
+    openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout $PRIVATE_PATH/odn-key.pem -out $CERTS_PATH/odn-cert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}'' -nodes
+    openssl pkcs12 -export -inkey $PRIVATE_PATH/odn-key.pem -in $CERTS_PATH/odn-cert.pem -out $CERTS_PATH/service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
+    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore $CERTS_PATH/service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
+    
+    update-ca-certificates
+    echo "keystore created"
+    
     echo "<< generate_keystore"
 } 
 
@@ -142,10 +135,15 @@ set_ldap_evolveum() {
 
 case "$1" in
     configure)
+        VERSION="$2"
         create_user
         fix_perms
         set_ldap_evolveum
-        generate_keystore
+        # if not upgrade
+        if [ "${VERSION}" = "" ] ; then
+            generate_keystore
+        fi
+        
         service_start
     ;;
 

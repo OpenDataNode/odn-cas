@@ -71,8 +71,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-cas</prefix>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -81,11 +79,11 @@
                                                 <path>/var/cache/odn-cas/</path>
                                                 <path>/var/log/odn-cas/</path>
                                                 <path>/var/tmp/odn-cas</path>
+                                                <path>/etc/odn-cas/ssl/certs</path>
+                                                <path>/etc/odn-cas/ssl/private</path>
                                             </paths>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -95,10 +93,17 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
+                                        <data>
+                                            <type>link</type>
+                                            <linkName>/usr/local/share/ca-certificates/odn-cert.pem</linkName>
+                                            <linkTarget>/etc/odn-cas/ssl/certs/odn-cert.pem</linkTarget>
+                                            <symlink>true</symlink>
+                                            <mapper>
+                                                <type>perm</type>
+                                            </mapper>
+                                        </data>                                        
                                         <data>
                                             <type>link</type>
                                             <linkName>/usr/share/odn-cas/work</linkName>
@@ -106,8 +111,6 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -117,8 +120,6 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -127,8 +128,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-cas/webapps/cas</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -137,8 +136,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-simple/ldap</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -147,8 +144,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/etc/odn-simple/ldap</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -157,8 +152,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/etc/odn-cas</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -167,8 +160,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/etc/odn-cas</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>                                        
                                    </dataSet>
