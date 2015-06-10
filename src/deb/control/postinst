@@ -96,7 +96,8 @@ set_ldap_evolveum() {
     chmod +x /usr/share/odn-cas/bin/ldapgenerate 
     chmod +x /usr/share/odn-cas/bin/slapdconf 
     chmod +x /usr/share/odn-cas/bin/slapdadm
-    chmod +x /usr/share/odn-cas/bin/ldaptest 
+    chmod +x /usr/share/odn-cas/bin/ldaptest
+    chmod +x /usr/share/odn-cas/bin/schema2ldif
 
     CONFIG=/etc/default/slapd
     LDAP_DB_PATH=/var/lib/ldap_odn
@@ -113,6 +114,8 @@ set_ldap_evolveum() {
         /usr/share/odn-cas/bin/slapdconf add-overlay $TREE sssvlv olcSssVlvConfig
 
         /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
+
+        /usr/share/odn-cas/bin/slapdconf add-schema --dbDir $LDAP_DB_PATH --rootPassword admin -f /etc/ldap/schema/midpoint.schema
 
         ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
         ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
