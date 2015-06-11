@@ -36,7 +36,7 @@ case "$1" in
     # this package.
     # discart old certificates - for 1.0.2
     HOSTNAME=$(get_hostname)
-    rm -f /usr/local/share/ca-certificates/$HOSTNAME 
+    rm -rf /usr/local/share/ca-certificates/$HOSTNAME 
     rm -f /etc/ssl/certs/odn-cert.pem
     rm -f /etc/ssl/private/odn-key.pem
     update-ca-certificates --fresh
