@@ -81,7 +81,7 @@ generate_keystore() {
 
     openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout $PRIVATE_PATH/odn-key.pem -out $CERTS_PATH/odn-cert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}'' -nodes
     openssl pkcs12 -export -inkey $PRIVATE_PATH/odn-key.pem -in $CERTS_PATH/odn-cert.pem -out $CERTS_PATH/service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
-    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore $CERTS_PATH/service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
+    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore $CERTS_PATH/service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12 -noprompt
     
     update-ca-certificates
     echo "keystore created"
@@ -121,18 +121,19 @@ set_ldap_evolveum() {
         ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
         echo "ldap user for IDM created"    
        
-        # set slapd to running on 127.0.0.1
-        if grep -q "^SLAPD_SERVICES=\"ldap://127.0.0.1:389/" $CONFIG ; then
-            echo "slapd has already been set to running on localhost port"
-        else
-            sed -i "s/^SLAPD_SERVICES.*/SLAPD_SERVICES=\"ldap:\/\/127.0.0.1:389\/\/ ldapi:\/\/\/\"/" $CONFIG
-        fi
-       
-        service_slapd_restart
     else
+        # set slapd to running on 127.0.0.1     
         echo "ldap has already been set"
     fi
+
+    if grep -q "^SLAPD_SERVICES=\"ldap://127.0.0.1:389/" $CONFIG ; then
+        echo "slapd has already been set to running on localhost port"
+    else
+        sed -i "s/^SLAPD_SERVICES.*/SLAPD_SERVICES=\"ldap:\/\/127.0.0.1:389\/\/ ldapi:\/\/\/\"/" $CONFIG
+    fi
    
+    service_slapd_restart    
+
     echo "<< set_ldap"
 }
 
@@ -142,8 +143,8 @@ case "$1" in
         create_user
         fix_perms
         set_ldap_evolveum
-        # if not upgrade
-        if [ "${VERSION}" = "" ] ; then
+        # if not upgrade or version = 1.0.2
+        if [ "${VERSION}" = "" ] || [ "${VERSION}" = "1.0.2" ] ; then
             generate_keystore
         fi
         
