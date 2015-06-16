@@ -62,7 +62,7 @@ case "$1" in
     
     # reload default slapd configuration
     if [ -x "/etc/init.d/slapd" ]; then
-        invoke-rc.d slapd start || true
+        invoke-rc.d slapd restart || true
     fi 
     
     # clean cert

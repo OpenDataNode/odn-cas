@@ -26,9 +26,10 @@ create_user() {
 
 fix_perms() {
     chmod +x  /etc/init.d/odn-cas
-    chown  odn-cas /var/cache/odn-cas
-    chown  odn-cas /var/tmp/odn-cas
-    chown  odn-cas /var/log/odn-cas
+    chown  odn-cas -R /var/cache/odn-cas
+    chown  odn-cas -R /var/tmp/odn-cas
+    chown  odn-cas -R /var/log/odn-cas
+    chown  odn-cas -R /usr/share/odn-cas
 }
 
 service_start() {
@@ -40,6 +41,15 @@ service_start() {
         service odn-cas restart || true
     fi
 }
+
+service_slapd_restart() {
+    if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+        invoke-rc.d slapd restart || true
+    else
+        service slapd restart || true
+    fi
+}
+
 
 get_hostname() {
     HOSTNAME=`hostname --all-fqdns`
@@ -62,28 +72,20 @@ generate_keystore() {
     echo ">> generate_keystore"
   
     HOSTNAME=$(get_hostname)
- 
+    CERTS_PATH=/etc/odn-cas/ssl/certs
+    PRIVATE_PATH=/etc/odn-cas/ssl/private
     KEYSTORE_NAME=/usr/share/odn-cas/conf/.keystore
     KEYSTORE_PASSWORD="changeit"
     PRIVATEKEY_PASS="changeit"
     DAYS_VALID=730
 
-    CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
-    if [ ! -d $CERTS_PATH ] ; then 
-        mkdir $CERTS_PATH
-   
-        openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout servicekey.pem -out servicecert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}''
-        openssl pkcs12 -export -inkey servicekey.pem -in servicecert.pem -out service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
-        keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12
-        keytool -export -storepass $KEYSTORE_PASSWORD -keystore /usr/share/odn-cas/conf/.keystore -alias tomcat -file $CERTS_PATH/export.crt
-        rm *.pem *.p12
-
-        update-ca-certificates
-        echo "keystore created"
-    else
-        echo "keystore has already been set"
-    fi
-     
+    openssl req -x509 -days $DAYS_VALID -newkey rsa:2048 -keyout $PRIVATE_PATH/odn-key.pem -out $CERTS_PATH/odn-cert.pem -passout pass:$KEYSTORE_PASSWORD -subj '/CN='${HOSTNAME}'' -nodes
+    openssl pkcs12 -export -inkey $PRIVATE_PATH/odn-key.pem -in $CERTS_PATH/odn-cert.pem -out $CERTS_PATH/service.p12 -name tomcat -passin pass:$KEYSTORE_PASSWORD -passout pass:$PRIVATEKEY_PASS
+    keytool -importkeystore -destkeystore $KEYSTORE_NAME -deststorepass $KEYSTORE_PASSWORD -deststoretype jks -srckeystore $CERTS_PATH/service.p12 -srcstorepass $PRIVATEKEY_PASS -srcstoretype pkcs12 -noprompt
+    
+    update-ca-certificates
+    echo "keystore created"
+    
     echo "<< generate_keystore"
 } 
 
@@ -94,8 +96,10 @@ set_ldap_evolveum() {
     chmod +x /usr/share/odn-cas/bin/ldapgenerate 
     chmod +x /usr/share/odn-cas/bin/slapdconf 
     chmod +x /usr/share/odn-cas/bin/slapdadm
-    chmod +x /usr/share/odn-cas/bin/ldaptest 
+    chmod +x /usr/share/odn-cas/bin/ldaptest
+    chmod +x /usr/share/odn-cas/bin/schema2ldif
 
+    CONFIG=/etc/default/slapd
     LDAP_DB_PATH=/var/lib/ldap_odn
    
     if [ ! -d $LDAP_DB_PATH ]; then
@@ -111,22 +115,39 @@ set_ldap_evolveum() {
 
         /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
+        /usr/share/odn-cas/bin/slapdconf add-schema --dbDir $LDAP_DB_PATH --rootPassword admin -f /etc/ldap/schema/midpoint.schema
+
         ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
         ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
-        echo "ldap user for IDM created"	
+        echo "ldap user for IDM created"    
+       
     else
+        # set slapd to running on 127.0.0.1     
         echo "ldap has already been set"
     fi
+
+    if grep -q "^SLAPD_SERVICES=\"ldap://127.0.0.1:389/" $CONFIG ; then
+        echo "slapd has already been set to running on localhost port"
+    else
+        sed -i "s/^SLAPD_SERVICES.*/SLAPD_SERVICES=\"ldap:\/\/127.0.0.1:389\/\/ ldapi:\/\/\/\"/" $CONFIG
+    fi
    
+    service_slapd_restart    
+
     echo "<< set_ldap"
 }
 
 case "$1" in
     configure)
+        VERSION="$2"
         create_user
         fix_perms
         set_ldap_evolveum
-        generate_keystore
+        # if not upgrade or version = 1.0.2
+        if [ "${VERSION}" = "" ] || [ "${VERSION}" = "1.0.2" ] ; then
+            generate_keystore
+        fi
+        
         service_start
     ;;
 

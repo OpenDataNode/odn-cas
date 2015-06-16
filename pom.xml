@@ -4,7 +4,7 @@
     <groupId>sk.eea.edem</groupId>
     <artifactId>odn-cas-overlay</artifactId>
     <packaging>war</packaging>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <build>
         <plugins>
@@ -65,24 +65,12 @@
                                                 <prefix>/etc</prefix>
                                             </mapper>
                                         </data>
-                                        <!-- data>
-                                            <src>${basedir}/src/deb/var/lib/midpoint.home</src>
-                                            <type>directory</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>/var/lib/midpoint.home</prefix>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
-                                            </mapper>
-                                        </data -->
                                         <data>
                                             <src>${basedir}/src/deb/usr/share/odn-cas</src>
                                             <type>directory</type>
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-cas</prefix>
-                                                <user>odn-midpoint</user>
-                                                <group>odn-midpoint</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -91,11 +79,11 @@
                                                 <path>/var/cache/odn-cas/</path>
                                                 <path>/var/log/odn-cas/</path>
                                                 <path>/var/tmp/odn-cas</path>
+                                                <path>/etc/odn-cas/ssl/certs</path>
+                                                <path>/etc/odn-cas/ssl/private</path>
                                             </paths>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -105,10 +93,17 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
+                                        <data>
+                                            <type>link</type>
+                                            <linkName>/usr/local/share/ca-certificates/odn-cert.crt</linkName>
+                                            <linkTarget>/etc/odn-cas/ssl/certs/odn-cert.pem</linkTarget>
+                                            <symlink>true</symlink>
+                                            <mapper>
+                                                <type>perm</type>
+                                            </mapper>
+                                        </data>                                        
                                         <data>
                                             <type>link</type>
                                             <linkName>/usr/share/odn-cas/work</linkName>
@@ -116,8 +111,6 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -127,8 +120,6 @@
                                             <symlink>true</symlink>
                                             <mapper>
                                                 <type>perm</type>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -137,8 +128,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-cas/webapps/cas</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -147,8 +136,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/usr/share/odn-simple/ldap</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -157,8 +144,6 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/etc/odn-simple/ldap</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
                                         <data>
@@ -167,10 +152,16 @@
                                             <mapper>
                                                 <type>perm</type>
                                                 <prefix>/etc/odn-cas</prefix>
-                                                <user>odn-cas</user>
-                                                <group>odn-cas</group>
                                             </mapper>
                                         </data>
+                                        <data>
+                                            <src>${project.basedir}/log4j2.xml</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/etc/odn-cas</prefix>
+                                            </mapper>
+                                        </data>                                        
                                    </dataSet>
                                 </configuration>
                             </execution>
