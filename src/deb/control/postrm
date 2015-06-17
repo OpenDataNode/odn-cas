@@ -44,6 +44,7 @@ case "$1" in
         fi 
         
         rm -rf /var/log/odn-cas
+        rm -rf /var/tmp/odn-cas/
         rm -rf /var/cache/odn-cas
         rm -rf /usr/share/odn-cas/conf
     ;;
