@@ -115,7 +115,7 @@ set_ldap_evolveum() {
 
         /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
-        if [ -f /etc/ldap/schema/midpoint.schema ]; then
+        if [ ! -f /etc/ldap/schema/midpoint.schema ]; then
             /usr/share/odn-cas/bin/slapdconf add-schema --dbDir $LDAP_DB_PATH --rootPassword admin -f /etc/ldap/schema/midpoint.schema
             echo "schema has been created"
         fi
