@@ -115,7 +115,10 @@ set_ldap_evolveum() {
 
         /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
-        /usr/share/odn-cas/bin/slapdconf add-schema --dbDir $LDAP_DB_PATH --rootPassword admin -f /etc/ldap/schema/midpoint.schema
+        if [ -f /etc/ldap/schema/midpoint.schema ]; then
+            /usr/share/odn-cas/bin/slapdconf add-schema --dbDir $LDAP_DB_PATH --rootPassword admin -f /etc/ldap/schema/midpoint.schema
+            echo "schema has been created"
+        fi
 
         ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
         ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
