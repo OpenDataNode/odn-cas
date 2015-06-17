@@ -69,7 +69,11 @@ case "$1" in
         fi
         
         update-ca-certificates  
-    
+        
+        rm -rf /usr/local/share
+        rm -rf /var/log/odn-cas
+        rm -rf /var/cache/odn-cas
+        rm -rf /usr/share/odn-cas/conf
     ;;
     purge)
 
