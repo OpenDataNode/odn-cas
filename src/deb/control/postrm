@@ -57,6 +57,7 @@ case "$1" in
         
         update-ca-certificates      
 
+        rm -rf /etc/ldap/schema/midpoint.schema
         rm -rf /etc/odn-cas/ssl/private
         rm -rf /etc/odn-cas/ssl/certs
     ;;
