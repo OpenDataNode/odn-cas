@@ -40,39 +40,38 @@ get_hostname() {
 case "$1" in
 
     remove|abort-install|disappear)
-  
+        # clean ldap
+        ODN_CONF_LDAP=/etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif
+        if [ -f $ODN_CONF_LDAP  ] ; then     
+            rm -f $ODN_CONF_LDAP 
+        fi
+        
+        ODN_CONF_LDAP=/etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb
+        if [ -d $ODN_CONF_LDAP  ] ; then     
+            rm -rf $ODN_CONF_LDAP 
+        fi
+      
+        LDAP_DB_PATH=/var/lib/ldap_odn
+        if [ -d $LDAP_DB_PATH  ] ; then     
+            rm -rf $LDAP_DB_PATH 
+        fi
+        
+        # reload default slapd configuration
+        if [ -x "/etc/init.d/slapd" ]; then
+            invoke-rc.d slapd restart || true
+        fi 
+        
+        # clean cert
+        HOSTNAME=$(get_hostname)
+        CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
+        if [ -d $CERTS_PATH  ] ; then     
+            rm -rf $CERTS_PATH 
+        fi
+        
+        update-ca-certificates  
     
     ;;
     purge)
-    # clean ldap
-    ODN_CONF_LDAP=/etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif
-    if [ -f $ODN_CONF_LDAP  ] ; then     
-        rm -f $ODN_CONF_LDAP 
-    fi
-    
-    ODN_CONF_LDAP=/etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb
-    if [ -d $ODN_CONF_LDAP  ] ; then     
-        rm -rf $ODN_CONF_LDAP 
-    fi
-  
-    LDAP_DB_PATH=/var/lib/ldap_odn
-    if [ -d $LDAP_DB_PATH  ] ; then     
-        rm -rf $LDAP_DB_PATH 
-    fi
-    
-    # reload default slapd configuration
-    if [ -x "/etc/init.d/slapd" ]; then
-        invoke-rc.d slapd restart || true
-    fi 
-    
-    # clean cert
-    HOSTNAME=$(get_hostname)
-    CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
-    if [ -d $CERTS_PATH  ] ; then     
-        rm -rf $CERTS_PATH 
-    fi
-    
-    update-ca-certificates
 
     ;;
     
