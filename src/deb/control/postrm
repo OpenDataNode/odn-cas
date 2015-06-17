@@ -76,7 +76,8 @@ case "$1" in
         rm -rf /usr/share/odn-cas/conf
     ;;
     purge)
-
+        rm -rf /etc/odn-cas/ssl/private
+        rm -rf /etc/odn-cas/ssl/certs
     ;;
     
     
