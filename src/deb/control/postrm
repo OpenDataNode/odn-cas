@@ -19,24 +19,6 @@ set -e
 # the debian-policy package
 
 
-get_hostname() {
-    HOSTNAME=`hostname --all-fqdns`
-    if [ -z ${HOSTNAME}  ]
-    then
-        HOSTNAME=`hostname`
-    fi
-
-    if [ -z ${HOSTNAME}  ] 
-    then
-        HOSTNAME="localhost"
-    fi
-
-    HOSTNAME="$(echo "${HOSTNAME}" | tr -d '[[:space:]]')"    
-    # return hostname
-    echo "$HOSTNAME"
-}
-
-
 case "$1" in
 
     remove|abort-install|disappear)
@@ -61,21 +43,19 @@ case "$1" in
             invoke-rc.d slapd restart || true
         fi 
         
-        # clean cert
-        HOSTNAME=$(get_hostname)
-        CERTS_PATH=/usr/local/share/ca-certificates/$HOSTNAME
-        if [ -d $CERTS_PATH  ] ; then     
-            rm -rf $CERTS_PATH 
-        fi
-        
-        update-ca-certificates  
-        
-        rm -rf /usr/local/share
         rm -rf /var/log/odn-cas
         rm -rf /var/cache/odn-cas
         rm -rf /usr/share/odn-cas/conf
     ;;
     purge)
+        # clean cert
+        CERTS_PATH=/usr/local/share/ca-certificates/odn-cert.crt
+        if [ -h $CERTS_PATH  ] ; then     
+            unlink $CERTS_PATH 
+        fi
+        
+        update-ca-certificates      
+
         rm -rf /etc/odn-cas/ssl/private
         rm -rf /etc/odn-cas/ssl/certs
     ;;
