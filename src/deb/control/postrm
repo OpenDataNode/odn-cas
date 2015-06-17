@@ -43,6 +43,12 @@ case "$1" in
             invoke-rc.d slapd restart || true
         fi 
         
+        if [ -x "/etc/init.d/odn-cas" ]; then
+            invoke-rc.d odn-cas stop || true
+        fi         
+        
+        update-rc.d odn-cas remove
+        
         rm -rf /var/log/odn-cas
         rm -rf /var/tmp/odn-cas/
         rm -rf /var/cache/odn-cas
