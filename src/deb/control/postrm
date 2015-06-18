@@ -43,6 +43,7 @@ case "$1" in
             invoke-rc.d slapd restart || true
         fi 
         # }
+        
         if [ -x "/etc/init.d/odn-cas" ]; then
             invoke-rc.d odn-cas stop || true
         fi         
@@ -74,7 +75,9 @@ case "$1" in
     
     
     upgrade|failed-upgrade|abort-upgrade)
-
+        if [ -x "/etc/init.d/odn-cas" ]; then
+            invoke-rc.d odn-cas restart || true
+        fi     
     ;;
 
     *)
