@@ -62,11 +62,11 @@ case "$1" in
             unlink $CERTS_PATH 
         fi
         
-        update-ca-certificates      
-
         rm -rf /etc/ldap/schema/midpoint.schema
         rm -rf /etc/odn-cas/ssl/private
         rm -rf /etc/odn-cas/ssl/certs
+        
+        update-ca-certificates --fresh      
     ;;
     
     
