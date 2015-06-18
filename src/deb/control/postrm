@@ -22,7 +22,7 @@ set -e
 case "$1" in
 
     remove|abort-install|disappear)
-        # clean ldap
+        # clean ldap {
         ODN_CONF_LDAP=/etc/ldap/slapd.d/cn\=config/olcDatabase\=\{2\}hdb.ldif
         if [ -f $ODN_CONF_LDAP  ] ; then     
             rm -f $ODN_CONF_LDAP 
@@ -42,17 +42,21 @@ case "$1" in
         if [ -x "/etc/init.d/slapd" ]; then
             invoke-rc.d slapd restart || true
         fi 
-        
+        # }
         if [ -x "/etc/init.d/odn-cas" ]; then
             invoke-rc.d odn-cas stop || true
         fi         
         
         update-rc.d odn-cas remove
-        
+        # remove directories
         rm -rf /var/log/odn-cas
         rm -rf /var/tmp/odn-cas/
         rm -rf /var/cache/odn-cas
         rm -rf /usr/share/odn-cas/
+
+        # delete user 
+        deluser odn-cas || true        
+        
     ;;
     purge)
         # clean cert
