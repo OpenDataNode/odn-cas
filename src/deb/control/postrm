@@ -44,10 +44,6 @@ case "$1" in
         fi 
         # }
         
-        if [ -x "/etc/init.d/odn-cas" ]; then
-            invoke-rc.d odn-cas stop || true
-        fi         
-        
         update-rc.d odn-cas remove
         # remove directories
         rm -rf /var/log/odn-cas
