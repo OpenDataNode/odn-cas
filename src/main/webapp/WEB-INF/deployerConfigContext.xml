@@ -110,7 +110,7 @@
 
 <bean id="primaryAuthenticationHandler"
           class="org.jasig.cas.authentication.LdapAuthenticationHandler"
-         p:principalIdAttribute="ou"
+         p:principalIdAttribute="o"
       c:authenticator-ref="authenticator" p:principalAttributeMap-ref="attributesToReturn">
 	  </bean>
     
