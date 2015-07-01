@@ -65,6 +65,13 @@ case "$1" in
         rm -rf /etc/ldap/schema/midpoint.schema
         rm -rf /etc/odn-cas/ssl/private
         rm -rf /etc/odn-cas/ssl/certs
+        rm -rf /etc/ldap/slapd.d/cn\=config/cn\=schema/cn\=\{4\}midpoint.ldif
+        
+        # reload default slapd configuration
+        if [ -x "/etc/init.d/slapd" ]; then
+            invoke-rc.d slapd restart || true
+        fi 
+        # }
         
         update-ca-certificates --fresh      
     ;;
