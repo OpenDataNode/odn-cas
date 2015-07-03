@@ -4,7 +4,7 @@
     <groupId>sk.eea.edem</groupId>
     <artifactId>odn-cas-overlay</artifactId>
     <packaging>war</packaging>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
 
     <build>
         <plugins>
@@ -146,22 +146,6 @@
                                                 <prefix>/etc/odn-simple/ldap</prefix>
                                             </mapper>
                                         </data>
-                                        <data>
-                                            <src>${project.basedir}/cas.properties</src>
-                                            <type>file</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>/etc/odn-cas</prefix>
-                                            </mapper>
-                                        </data>
-                                        <data>
-                                            <src>${project.basedir}/log4j2.xml</src>
-                                            <type>file</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>/etc/odn-cas</prefix>
-                                            </mapper>
-                                        </data>                                        
                                    </dataSet>
                                 </configuration>
                             </execution>

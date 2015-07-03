@@ -110,19 +110,20 @@
 
 <bean id="primaryAuthenticationHandler"
           class="org.jasig.cas.authentication.LdapAuthenticationHandler"
-         p:principalIdAttribute="uid"
+         p:principalIdAttribute="o"
       c:authenticator-ref="authenticator" p:principalAttributeMap-ref="attributesToReturn">
 	  </bean>
     
     <util:map id="attributesToReturn">
-            <entry key="initials" value="SPR.Roles"/>
-            <entry key="cn" value="cn" />
+            <entry key="initials" value="Roles"/>
+            <entry key="cn" value="ActorFormattedName" />
             <entry key="sn" value="sn" />
             <entry key="givenName" value="givenName" />
-			<entry key="ou" value="ou" />
-			<entry key="o" value="o" />
+	    <!-- entry key="ou" value="ou" />
+	    <entry key="o" value="o" / -->
             <entry key="mail" value="mail" />
             <entry key="displayName" value="displayName" />
+	    <entry key="uid" value="ActorID"/>
 	</util:map>
 	
 	<bean id="authenticator" class="org.ldaptive.auth.Authenticator"
