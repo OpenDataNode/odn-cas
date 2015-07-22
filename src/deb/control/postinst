@@ -50,6 +50,13 @@ service_slapd_restart() {
     fi
 }
 
+service_slapd_start() {
+    if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+        invoke-rc.d slapd start || true
+    else
+        service slapd start || true
+    fi
+}
 
 get_hostname() {
     HOSTNAME=`hostname --all-fqdns`
@@ -149,6 +156,7 @@ set_ldap_evolveum() {
 case "$1" in
     configure)
         VERSION="$2"
+        service_slapd_start
         create_user
         fix_perms
         set_ldap_evolveum
