@@ -101,7 +101,13 @@ set_ldap_evolveum() {
 
     CONFIG=/etc/default/slapd
     LDAP_DB_PATH=/var/lib/ldap_odn
-   
+
+    if [ ! -f  /etc/ldap/slapd.d/cn\=config/cn\=schema/cn\=\{4\}midpoint.ldif ]; then
+        /usr/share/odn-cas/bin/slapdconf add-schema midpoint -rootPassword admin -f /etc/ldap/schema/midpoint.schema
+        
+        echo "schema has been created"
+    fi
+    
     if [ ! -d $LDAP_DB_PATH ]; then
         mkdir -p /var/lib/ldap_odn
         chown -R openldap:openldap $LDAP_DB_PATH
