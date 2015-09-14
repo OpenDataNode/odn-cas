@@ -15,11 +15,7 @@
                 <version>1.0-m4.3</version>
                 <configuration>
                     <flowInitContext>
-                        <!-- masterBranchName>frankenstein</masterBranchName>
-                        <developBranchName>development</developBranchName>
-                        <featureBranchPrefix>feature-</featureBranchPrefix -->
                         <releaseBranchPrefix>ODN_v</releaseBranchPrefix>
-                        <!-- hotfixBranchPrefix>hotfix-</hotfixBranchPrefix -->
                         <versionTagPrefix>ODN_v</versionTagPrefix>
                     </flowInitContext>
                     <allowSnapshots>true</allowSnapshots>
@@ -172,34 +168,11 @@
         </dependency>
 
         <dependency>
-         <groupId>org.jasig.cas</groupId>
-         <artifactId>cas-server-support-ldap</artifactId>
-         <version>${cas.version}</version>
-    </dependency>
-
-        <!--<dependency>
             <groupId>org.jasig.cas</groupId>
-            <artifactId>cas-server-support-pac4j</artifactId>
-            <version>${cas.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jasig.cas</groupId>
-            <artifactId>cas-server-support-saml</artifactId>
+            <artifactId>cas-server-support-ldap</artifactId>
             <version>${cas.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-saml</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-core</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-        -->
     </dependencies>
 
     <properties>
