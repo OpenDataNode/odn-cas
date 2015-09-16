@@ -6,6 +6,13 @@
     <packaging>war</packaging>
     <version>1.2.0-SNAPSHOT</version>
 
+	<properties>
+		<debian-package-version>1.2.0~</debian-package-version>
+		<debian-package-name>${project.build.directory}/${project.artifactId}-${debian-package-version}_all.deb</debian-package-name>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
     <build>
         <plugins>
 
@@ -52,7 +59,8 @@
                         <goals>
                             <goal>jdeb</goal>
                         </goals>
-                        <configuration>
+						<configuration>
+							<deb>${debian-package-name}</deb>
                             <dataSet>
                                 <data>
                                     <src>${basedir}/src/deb/etc/</src>
