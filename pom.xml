@@ -11,6 +11,9 @@
 		<debian-package-name>${project.build.directory}/${project.artifactId}-${debian-package-version}_all.deb</debian-package-name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<cas.version>4.1.0-SNAPSHOT</cas.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
     <build>
@@ -182,13 +185,6 @@
         </dependency>
 
     </dependencies>
-
-    <properties>
-        <cas.version>4.1.0-SNAPSHOT</cas.version>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <repositories>
         <repository>
