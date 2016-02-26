@@ -134,14 +134,6 @@
                                         <prefix>/usr/share/odn-simple/ldap</prefix>
                                     </mapper>
                                 </data>
-                                <data>
-                                    <src>${project.basedir}/src/slapd/conf</src>
-                                    <type>directory</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/etc/odn-simple/ldap</prefix>
-                                    </mapper>
-                                </data>
                             </dataSet>
                         </configuration>
                     </execution>
