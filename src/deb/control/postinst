@@ -59,7 +59,7 @@ service_slapd_start() {
 }
 
 get_hostname() {
-    HOSTNAME=`hostname --all-fqdns`
+    HOSTNAME=`hostname -f`
     if [ -z ${HOSTNAME}  ]
     then
         HOSTNAME=`hostname`
