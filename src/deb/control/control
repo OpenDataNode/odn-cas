@@ -7,4 +7,4 @@ Architecture: all
 Maintainer: jan.marcek@eea.sk
 Homepage: https://www.apereo.org/
 Depends:  slapd, ldap-utils, libnet-ldap-perl, libauthen-sasl-perl, openjdk-7-jre-headless, tomcat7
-Description: CAS for Open Data Network
+Description: Open Data Node - Apereo CAS
