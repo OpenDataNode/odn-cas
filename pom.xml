@@ -36,6 +36,7 @@
                             <artifactId>cas-server-webapp</artifactId>
                             <excludes>
                                 <exclude>WEB-INF/cas.properties</exclude>
+                                <exclude>WEB-INF/classes/services/HTTPSandIMAPS-10000001.json</exclude>
                             </excludes>
                         </overlay>
                     </overlays>
@@ -168,7 +169,7 @@
     </dependencies>
 
     <properties>
-        <cas.version>4.1.0-SNAPSHOT</cas.version>
+        <cas.version>4.1.0</cas.version>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
