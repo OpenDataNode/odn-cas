@@ -17,6 +17,7 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+ACL_LDIF=/usr/share/odn-simple/ldap/acl.ldif
 
 create_user() {
   if ! id odn-cas > /dev/null 2>&1 ; then
@@ -50,9 +51,16 @@ service_slapd_restart() {
     fi
 }
 
+service_slapd_start() {
+    if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+        invoke-rc.d slapd start || true
+    else
+        service slapd start || true
+    fi
+}
 
 get_hostname() {
-    HOSTNAME=`hostname --all-fqdns`
+    HOSTNAME=`hostname -f`
     if [ -z ${HOSTNAME}  ]
     then
         HOSTNAME=`hostname`
@@ -89,8 +97,14 @@ generate_keystore() {
     echo "<< generate_keystore"
 } 
 
-set_ldap_evolveum() {
+set_acl() { 
+    echo ">> set_acl"
+    DB_TYPE="$1"
+    sed -i "s/\$DB_TYPE/$DB_TYPE/g"  $ACL_LDIF
+    echo "<< set_acl"
+}
 
+set_ldap_evolveum() {
     echo ">> set_ldap"
 
     chmod +x /usr/share/odn-cas/bin/ldapgenerate 
@@ -101,27 +115,38 @@ set_ldap_evolveum() {
 
     CONFIG=/etc/default/slapd
     LDAP_DB_PATH=/var/lib/ldap_odn
-   
+    
+    if [ ! -f  /etc/ldap/slapd.d/cn\=config/cn\=schema/cn\=\{4\}midpoint.ldif ]; then
+        /usr/share/odn-cas/bin/slapdconf add-schema midpoint -rootPassword admin -f /etc/ldap/schema/midpoint.schema
+        echo "schema has been created"
+    fi
+    
     if [ ! -d $LDAP_DB_PATH ]; then
         mkdir -p /var/lib/ldap_odn
         chown -R openldap:openldap $LDAP_DB_PATH
             
         TREE="dc=opendata,dc=org"
-
-        /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin
+        LIST_DATABASE=`/usr/share/odn-cas/bin/slapdconf list-databases`
+    
+        if  echo ${LIST_DATABASE} | grep -q "}mdb "; then
+            echo "create mdb database"
+            /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin --dbType mdb
+            set_acl mdb
+        elif echo ${LIST_DATABASE} | grep -q "}hdb "; then
+            echo "create hdb database"
+            /usr/share/odn-cas/bin/slapdconf create-suffix $TREE --dbDir $LDAP_DB_PATH --rootPassword admin
+            set_acl hdb
+        else
+            echo "ERROR: unknown slapd database"
+            exit 1
+        fi
 
         /usr/share/odn-cas/bin/slapdconf add-module sssvlv
         /usr/share/odn-cas/bin/slapdconf add-overlay $TREE sssvlv olcSssVlvConfig
-
         /usr/share/odn-cas/bin/ldapgenerate -D cn=admin,$TREE -w admin -i -s dc=opendata,dc=org
 
-        if [ -f /etc/ldap/schema/midpoint.schema ]; then
-            /usr/share/odn-cas/bin/slapdconf add-schema midpoint -rootPassword admin -f /etc/ldap/schema/midpoint.schema
-            echo "schema has been created"
-        fi
-
         ldapadd -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/admin.ldif
-        ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/share/odn-simple/ldap/acl.ldif     
+        ldapmodify -Y EXTERNAL -H ldapi:/// -f $ACL_LDIF  
         echo "ldap user for IDM created"    
        
     else
@@ -143,6 +168,7 @@ set_ldap_evolveum() {
 case "$1" in
     configure)
         VERSION="$2"
+        service_slapd_start
         create_user
         fix_perms
         set_ldap_evolveum

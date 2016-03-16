@@ -1,4 +1,4 @@
-dn: olcDatabase={2}hdb,cn=config
+dn: olcDatabase={2}$DB_TYPE,cn=config
 changetype: modify
 replace: olcAccess
 olcAccess: to attrs=userPassword dn.subtree="ou=people,dc=opendata,dc=org" filter="(midPointAccountStatus=disabled)" by dn.subtree="ou=people,dc=opendata,dc=org" none by anonymous none by * break
