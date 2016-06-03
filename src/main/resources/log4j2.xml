@@ -50,7 +50,7 @@
     </Appenders>
     <Loggers>
         <Logger name="org.jasig" level="warn" additivity="false">
-            <AppenderRef ref="console"/>
+<!--            <AppenderRef ref="console"/> -->
             <AppenderRef ref="file"/>
         </Logger>
         <Logger name="org.springframework" level="warn" />

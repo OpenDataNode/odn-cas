@@ -105,6 +105,15 @@
                                 </data>
                                 <data>
                                     <type>link</type>
+                                    <linkName>/etc/odn-cas/log4j2.xml</linkName>
+                                    <linkTarget>/usr/share/odn-cas/webapps/cas/WEB-INF/classes/log4j2.xml</linkTarget>
+                                    <symlink>true</symlink>
+                                    <mapper>
+                                        <type>perm</type>
+                                    </mapper>
+                                </data>                                
+                                <data>
+                                    <type>link</type>
                                     <linkName>/usr/local/share/ca-certificates/odn-cert.crt</linkName>
                                     <linkTarget>/etc/odn-cas/ssl/certs/odn-cert.pem</linkTarget>
                                     <symlink>true</symlink>
