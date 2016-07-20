@@ -4,7 +4,7 @@
     <groupId>sk.eea.edem</groupId>
     <artifactId>odn-cas-overlay</artifactId>
     <packaging>war</packaging>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 
 	<properties>
 		<debian-package-version>${version}~</debian-package-version>
