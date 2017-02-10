@@ -7,13 +7,13 @@
     <version>1.1.2</version>
 
 	<properties>
-		<debian-package-version>${version}~</debian-package-version>
+		<debian-package-version>${project.version}~</debian-package-version>
 		<debian-package-name>${project.build.directory}/${project.artifactId}-${debian-package-version}_all.deb</debian-package-name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <cas.version>4.1.0</cas.version>
+        <cas.version>4.1.10</cas.version>
 	</properties>
 
     <build>
